@@ -19,4 +19,4 @@ The proposed work includes model specification, fee-inclusive experiments, a loc
 ## Author
 Satyawan Singh: https://github.com/ss1738
 
-Public research references are listed in PROPOSAL.md. No private email or prior application response is included in this repository draft. A code licence will be selected before publication.
+Public research references are listed in PROPOSAL.md. No private email or prior application response is included in this repository draft. Code is released under the MIT licence (see LICENSE).
