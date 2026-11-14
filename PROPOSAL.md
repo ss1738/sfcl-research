@@ -34,7 +34,7 @@ MEASURED: A 2026 survey of encrypted mempools concludes that blind ordering with
 
 Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [11]. Arrakis published a v4 hook proof of concept in which the block builder commits a price and the tokens removed from the pool are re-added gradually over later blocks [12]. Unichain builds blocks in a trusted execution environment (TEE) with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [13].
 
-INFERRED: The open question is narrow. It is whether an auction over hidden, order-committed flow adds net LP benefit beyond the same rules with visible orders (B), and beyond simpler defenses such as batching, am-AMM style rights or TEE ordering. Bidders who cannot see the batch may bid low, and a TEE-based approach may dominate. Either result is acceptable. M1 will compare the proposed rights and timing with each source above and will stop or narrow the work if the candidate is duplicative.
+INFERRED: The open question is narrow. It is whether an auction over hidden, order-committed flow adds net LP benefit beyond the same rules with visible orders (B), and beyond simpler defences such as batching, am-AMM style rights or TEE ordering. Bidders who cannot see the batch may bid low, and a TEE-based approach may dominate. Either result is acceptable. M1 will compare the proposed rights and timing with each source above and will stop or narrow the work if the candidate is duplicative.
 
 ## Candidate mechanism and comparisons
 
@@ -92,7 +92,7 @@ INFERRED: For fee-free full-range value V(p)=K sqrt(p), a relative jump z greate
 
 ## Continuation criteria
 
-Before the main runs, publish representative scenarios, stress cases and numerical decision thresholds. Continue toward integration only if confidentiality adds positive net LP benefit over B in the agreed cases, with trader tradeoffs disclosed. If not, publish the negative result and recommend the simpler mechanism. A code prototype is not evidence of economic benefit.
+Before the main runs, publish representative scenarios, stress cases and numerical decision thresholds. Continue toward integration only if confidentiality adds positive net LP benefit over B in the agreed cases, with trader trade-offs disclosed. If not, publish the negative result and recommend the simpler mechanism. A code prototype is not evidence of economic benefit.
 
 ## Milestones and budget
 
@@ -122,11 +122,11 @@ Publish runnable A to D comparisons, analytical validation cases, explicit fees 
 
 ## M3 acceptance
 
-Publish a local v4 prototype and tests for authorization, replay, escrow, premium attribution, entry/exit timing, timeouts and recovery. Report which execution guarantees are enforced locally and which require external support. This is an experimental prototype, not an audited production deployment.
+Publish a local v4 prototype and tests for authorisation, replay, escrow, premium attribution, entry/exit timing, timeouts and recovery. Report which execution guarantees are enforced locally and which require external support. This is an experimental prototype, not an audited production deployment.
 
 ## M4 acceptance
 
-Publish the admission-proof decision and evidence. If justified, implement and benchmark a bounded proof relation; otherwise publish the simpler-defense comparison. Deliver the final findings, limitations, reproduction instructions and recommendation. Invite technical feedback and record responses without promising third-party review or endorsement.
+Publish the admission-proof decision and evidence. If justified, implement and benchmark a bounded proof relation; otherwise publish the simpler-defence comparison. Deliver the final findings, limitations, reproduction instructions and recommendation. Invite technical feedback and record responses without promising third-party review or endorsement.
 
 Milestone payments are proposed allocations tied to these outputs, subject to the grant agreement. A negative research result can satisfy a milestone if the specified experiments and evidence are delivered. Any major scope change will be agreed before the affected work proceeds.
 
