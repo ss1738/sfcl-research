@@ -32,7 +32,7 @@ MEASURED: am-AMM auctions the right to manage a pool through an onchain auction.
 
 MEASURED: A 2026 survey of encrypted mempools concludes that blind ordering with all-or-nothing decryption suppresses the same-block auctions that return value to users, and that an auction run after decryption comes too late [10]. SFCL is a candidate answer to that limitation, not a refutation of it: searchers bid before the batch is revealed, and the batch order is committed first.
 
-Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [11]. Arrakis published a proof of concept for auctioned rebalancing rights [12]. Unichain builds blocks in a trusted execution environment (TEE) with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [13].
+Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [11]. Arrakis published a v4 hook proof of concept in which the block builder commits a price and the tokens removed from the pool are re-added gradually over later blocks [12]. Unichain builds blocks in a trusted execution environment (TEE) with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [13].
 
 INFERRED: The open question is narrow. It is whether an auction over hidden, order-committed flow adds net LP benefit beyond the same rules with visible orders (B), and beyond simpler defenses such as batching, am-AMM style rights or TEE ordering. Bidders who cannot see the batch may bid low, and a TEE-based approach may dominate. Either result is acceptable. M1 will compare the proposed rights and timing with each source above and will stop or narrow the work if the candidate is duplicative.
 
@@ -170,6 +170,6 @@ SFCL is pre-launch research. No SFCL deployment, independent use, positive LP re
 
 [11] Uniswap Foundation. Builder stories: Yuki Yuminaga on ASS and Angstrom, 21 January 2025. https://uniswapfoundation.org/blog/builder-stories-yuki-yuminaga-on-ass-and-angstrom
 
-[12] Arrakis. How MEV auctions and dynamic fees prevent LVR. https://arrakis.finance/blog/the-amm-renaissance-how-mev-auctions-and-dynamic-fees-prevent-lvr
+[12] Arrakis Finance. Diamond hook proof of concept, code walkthrough. https://github.com/ArrakisFinance/minimize-lvr-hook-poc
 
 [13] Uniswap Labs. Rollup-Boost is live on Unichain. https://blog.uniswap.org/rollup-boost-is-live-on-unichain
