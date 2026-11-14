@@ -24,7 +24,15 @@ The work is intended for v4 researchers, hook developers and liquidity managers 
 
 ## Existing work
 
-MEASURED: v4 provides hooks and custom accounting [1]. am-AMM studies auctioned temporary management rights [2]. Shutter documents threshold release conditions [3]. These are starting points, not claimed inventions. The first milestone will compare the proposed rights and timing with those mechanisms before implementation proceeds.
+MEASURED: v4 provides hooks and custom accounting [1]. Several designs already address LP loss or user-level extraction. I do not claim any of them as new, and for [2], [9], [10] and [11] I read the abstracts and the sections cited here, not the full papers.
+
+MEASURED: am-AMM auctions the right to manage a pool through an onchain auction. Its authors note it may protect less against sandwich attacks than a fixed-fee pool, because the manager can push publicly visible transactions to their limit price [2]. FM-AMM batches trades and reports that competition between arbitrageurs removes arbitrage profit and sandwich attacks, under the assumption that trades are batched [9]. V0LVER combines an encrypted mempool with an AMM in which orders are decrypted after being allocated liquidity, and notes that naive batching still lets a block producer extract LVR by censoring orders [10]. Shutter documents threshold release conditions [3].
+
+MEASURED: A 2026 survey of encrypted mempools concludes that blind ordering with all-or-nothing decryption suppresses the same-block auctions that return value to users, and that an auction run after decryption comes too late [11]. SFCL is a candidate answer to that limitation, not a refutation of it: searchers bid before the batch is revealed, and the batch order is committed first.
+
+Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [12]. Arrakis published a proof of concept for auctioned rebalancing rights [13]. Unichain builds blocks in a trusted execution environment with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [14].
+
+INFERRED: The open question is narrow. It is whether an auction over hidden, order-committed flow adds net LP benefit beyond the same rules with visible orders (B), and beyond simpler defenses such as batching, am-AMM style rights or TEE ordering. Bidders who cannot see the batch may bid low, and a TEE-based approach may dominate. Either result is acceptable. M1 will compare the proposed rights and timing with each source above and will stop or narrow the work if the candidate is duplicative.
 
 ## Candidate mechanism and comparisons
 
@@ -153,3 +161,15 @@ SFCL is pre-launch research. No SFCL deployment, independent use, positive LP re
 [7] CoW M1 PR. https://github.com/cowdao-grants/cow-rs/pull/63
 
 [8] Groth16 setup and proving. https://docs.circom.io/getting-started/proving-circuits/
+
+[9] Canidio and Fritsch. Arbitrageurs' profits, LVR, and sandwich attacks: batch trading as an AMM design response. https://arxiv.org/abs/2307.02074
+
+[10] McMenamin and Daza. An AMM minimizing user-level extractable value and loss-versus-rebalancing (V0LVER). https://arxiv.org/abs/2301.13599
+
+[11] Passerat-Palmbach. SoK: Encrypted Mempools Through the MEV Lens. https://eprint.iacr.org/2026/1643
+
+[12] Uniswap Foundation. Builder stories: Yuki Yuminaga on ASS and Angstrom, 21 January 2025. https://uniswapfoundation.org/blog/builder-stories-yuki-yuminaga-on-ass-and-angstrom
+
+[13] Arrakis. How MEV auctions and dynamic fees prevent LVR. https://arrakis.finance/blog/the-amm-renaissance-how-mev-auctions-and-dynamic-fees-prevent-lvr
+
+[14] Uniswap Labs. Rollup-Boost is live on Unichain. https://blog.uniswap.org/rollup-boost-is-live-on-unichain
