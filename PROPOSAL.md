@@ -4,13 +4,15 @@ Research and prototype proposal
 
 Satyawan Singh | 14 November 2026 | Proposed request USD 90,000
 
+Repository: https://github.com/ss1738/sfcl-research (MIT licence)
+
 Proposed delivery period: 26 weeks. Cost estimate: 900 hours at $100 per hour. GUESS: Hours and rate are proposed estimates, not measured implementation costs. I will allocate approximately 35 hours per week over the proposed delivery period.
 
 ## What I propose
 
-I propose to study and prototype a Uniswap v4 execution mechanism that combines encrypted order submission with auctioned rebalancing rights. I will test whether the combination improves LP outcomes after accounting for execution costs, informed orders, weak auction competition and delayed settlement.
+I propose to study and prototype Sealed Flow Conditional Liquidity (SFCL), a Uniswap v4 execution mechanism that combines encrypted order submission with auctioned rebalancing rights. I will test whether the combination improves liquidity provider (LP) outcomes after accounting for execution costs, informed orders, weak auction competition and delayed settlement.
 
-I will carry out the work myself. The funded outputs will be a mechanism specification, economic model, reproducible experiments and a local v4 prototype. ZK admission will have a separate decision gate: I will implement a bounded proof prototype only if checking the policy before decryption serves a demonstrated purpose.
+I will carry out the work myself. The funded outputs will be a mechanism specification, economic model, reproducible experiments and a local v4 prototype. Zero-knowledge (ZK) admission will have a separate decision gate: I will implement a bounded proof prototype only if checking the policy before decryption serves a demonstrated purpose.
 
 ## The question to answer
 
@@ -20,17 +22,17 @@ INFERRED: Encryption can hide information about queued orders, but it does not h
 
 ## Who benefits
 
-The work is intended for v4 researchers, hook developers and liquidity managers assessing execution mechanisms. I will publish the model, source code, experiment settings and findings, including failures. This phase does not include a production launch, liquidity subsidy, new token or finalized standard.
+The work is intended for v4 researchers, hook developers and liquidity managers assessing execution mechanisms. I will publish the model, source code, experiment settings and findings, including failures. The benefit to the Uniswap ecosystem is a published, rerunnable answer to whether this mechanism class is worth building on v4, measured by net LP outcomes against a defined rebalancing benchmark. Original code will be released under the MIT licence. This phase does not include a production launch, liquidity subsidy, new token or finalised standard.
 
 ## Existing work
 
-MEASURED: v4 provides hooks and custom accounting [1]. Several designs already address LP loss or user-level extraction. I do not claim any of them as new, and for [2], [9], [10] and [11] I read the abstracts and the sections cited here, not the full papers.
+MEASURED: v4 provides hooks and custom accounting [1]. Several designs already address LP loss or user-level extraction. I do not claim any of them as new, and for [2], [8], [9] and [10] I read the abstracts and the sections cited here, not the full papers.
 
-MEASURED: am-AMM auctions the right to manage a pool through an onchain auction. Its authors note it may protect less against sandwich attacks than a fixed-fee pool, because the manager can push publicly visible transactions to their limit price [2]. FM-AMM batches trades and reports that competition between arbitrageurs removes arbitrage profit and sandwich attacks, under the assumption that trades are batched [9]. V0LVER combines an encrypted mempool with an AMM in which orders are decrypted after being allocated liquidity, and notes that naive batching still lets a block producer extract LVR by censoring orders [10]. Shutter documents threshold release conditions [3].
+MEASURED: am-AMM auctions the right to manage a pool through an onchain auction. Its authors note it may protect less against sandwich attacks than a fixed-fee pool, because the manager can push publicly visible transactions to their limit price [2]. FM-AMM batches trades and reports that competition between arbitrageurs removes arbitrage profit and sandwich attacks, under the assumption that trades are batched [8]. V0LVER combines an encrypted mempool with an AMM in which orders are decrypted after being allocated liquidity, and notes that naive batching still lets a block producer extract loss-versus-rebalancing (LVR) by censoring orders [9]. Shutter documents threshold release conditions [3].
 
-MEASURED: A 2026 survey of encrypted mempools concludes that blind ordering with all-or-nothing decryption suppresses the same-block auctions that return value to users, and that an auction run after decryption comes too late [11]. SFCL is a candidate answer to that limitation, not a refutation of it: searchers bid before the batch is revealed, and the batch order is committed first.
+MEASURED: A 2026 survey of encrypted mempools concludes that blind ordering with all-or-nothing decryption suppresses the same-block auctions that return value to users, and that an auction run after decryption comes too late [10]. SFCL is a candidate answer to that limitation, not a refutation of it: searchers bid before the batch is revealed, and the batch order is committed first.
 
-Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [12]. Arrakis published a proof of concept for auctioned rebalancing rights [13]. Unichain builds blocks in a trusted execution environment with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [14].
+Reviewed from public descriptions only, with full review left to M1: Angstrom is a v4 hook in which an off-chain sequencer network runs auctions on aggregated order flow and settles at a uniform clearing price [11]. Arrakis published a proof of concept for auctioned rebalancing rights [12]. Unichain builds blocks in a trusted execution environment (TEE) with priority-fee ordering. Its announcement describes a private encrypted mempool and also lists encrypted mempools as a future upgrade, so the current status needs confirming [13].
 
 INFERRED: The open question is narrow. It is whether an auction over hidden, order-committed flow adds net LP benefit beyond the same rules with visible orders (B), and beyond simpler defenses such as batching, am-AMM style rights or TEE ordering. Bidders who cannot see the batch may bid low, and a TEE-based approach may dominate. Either result is acceptable. M1 will compare the proposed rights and timing with each source above and will stop or narrow the work if the candidate is duplicative.
 
@@ -38,13 +40,13 @@ INFERRED: The open question is narrow. It is whether an auction over hidden, ord
 
 ## One execution cycle
 
-The initial model uses fixed-duration epochs. Before the bid deadline, users submit signed swap intents with an amount limit, expiry, recipient and nonce. A batch commitment fixes the admitted ciphertexts and their execution order. The commitment is part of the modeled protocol, not an assumed production sequencer feature.
+The initial model uses fixed-duration epochs. Before the bid deadline, users submit signed swap intents with an amount limit, expiry, recipient and nonce. A batch commitment fixes the admitted ciphertexts and their execution order. The commitment is part of the modelled protocol, not an assumed production sequencer feature.
 
 Searchers bid for one exclusive rebalancing opportunity after the committed user batch. They bid before the encrypted batch is revealed. The auction is sealed-bid and first-price, with a stated reserve and payment escrow. The winner must fund the payment before obtaining the right. Payment is allocated to LP capital exposed during that epoch.
 
-After release, the batch executes in the committed order with each intent’s stated limits. The winner can then execute one permitted rebalancing transaction. The initial model gives the winner no right to insert trades inside the batch. A bounded execution window, collateral, default penalties and fallback behavior will be specified in the first milestone and varied in experiments.
+After release, the batch executes in the committed order with each intent’s stated limits. The winner can then execute one permitted rebalancing transaction. The initial model gives the winner no right to insert trades inside the batch. A bounded execution window, collateral, default penalties and fallback behaviour will be specified in the first milestone and varied in experiments.
 
-The local prototype will restrict the modeled pool entry points. Experiments will separately introduce policy-compliant informed orders, order splitting and unauctioned access. Isolation in a simulator will not be presented as proof that arbitrage can be excluded in production.
+The local prototype will restrict the modelled pool entry points. Experiments will separately introduce policy-compliant informed orders, order splitting and unauctioned access. Isolation in a simulator will not be presented as proof that arbitrage can be excluded in production.
 
 ## Controlled comparisons
 
@@ -132,7 +134,7 @@ Milestone payments are proposed allocations tied to these outputs, subject to th
 
 ## Relevant experience
 
-I am Satyawan Singh. I propose to own the specification, model, prototype, experiments and report. My approach will keep measured results separate from consequences that remain assumptions.
+I am Satyawan Singh. I will own the specification, model, prototype, experiments and report.
 
 MEASURED: My Sui PR 28208 is marked merged and concerns Byzantine equivocation testing in the randomized consensus DAG harness [5]. My GitHub profile is https://github.com/ss1738 .
 
@@ -142,7 +144,7 @@ MEASURED: My earlier HookSwap application described Solidity fork testing, event
 
 MEASURED: CoW approved a separate $2,000 DAI signed-order conformance grant on 8 October 2026 [6]. M1 is tracked in PR 63 [7]. Approval is not presented as completed delivery or payment. No CoW deliverable or completed HookSwap work is charged to this request.
 
-SFCL is pre-launch research. No SFCL deployment, independent use, positive LP result or measured proving performance is claimed. This request funds the research and local prototype described here. Publication does not imply a production security guarantee.
+SFCL is pre-launch research. No SFCL deployment, independent use, positive LP result or measured proving performance is claimed. This request funds the research and local prototype described here. Publication does not imply a production security guarantee. The mechanism uses temporary confidentiality of submitted intents, which I disclose for any privacy-related review. No shielded balances or token issuance are proposed.
 
 ## References
 
@@ -160,16 +162,14 @@ SFCL is pre-launch research. No SFCL deployment, independent use, positive LP re
 
 [7] CoW M1 PR. https://github.com/cowdao-grants/cow-rs/pull/63
 
-[8] Groth16 setup and proving. https://docs.circom.io/getting-started/proving-circuits/
+[8] Canidio and Fritsch. Arbitrageurs' profits, LVR, and sandwich attacks: batch trading as an AMM design response. https://arxiv.org/abs/2307.02074
 
-[9] Canidio and Fritsch. Arbitrageurs' profits, LVR, and sandwich attacks: batch trading as an AMM design response. https://arxiv.org/abs/2307.02074
+[9] McMenamin and Daza. An AMM minimizing user-level extractable value and loss-versus-rebalancing (V0LVER). https://arxiv.org/abs/2301.13599
 
-[10] McMenamin and Daza. An AMM minimizing user-level extractable value and loss-versus-rebalancing (V0LVER). https://arxiv.org/abs/2301.13599
+[10] Passerat-Palmbach. SoK: Encrypted Mempools Through the MEV Lens. https://eprint.iacr.org/2026/1643
 
-[11] Passerat-Palmbach. SoK: Encrypted Mempools Through the MEV Lens. https://eprint.iacr.org/2026/1643
+[11] Uniswap Foundation. Builder stories: Yuki Yuminaga on ASS and Angstrom, 21 January 2025. https://uniswapfoundation.org/blog/builder-stories-yuki-yuminaga-on-ass-and-angstrom
 
-[12] Uniswap Foundation. Builder stories: Yuki Yuminaga on ASS and Angstrom, 21 January 2025. https://uniswapfoundation.org/blog/builder-stories-yuki-yuminaga-on-ass-and-angstrom
+[12] Arrakis. How MEV auctions and dynamic fees prevent LVR. https://arrakis.finance/blog/the-amm-renaissance-how-mev-auctions-and-dynamic-fees-prevent-lvr
 
-[13] Arrakis. How MEV auctions and dynamic fees prevent LVR. https://arrakis.finance/blog/the-amm-renaissance-how-mev-auctions-and-dynamic-fees-prevent-lvr
-
-[14] Uniswap Labs. Rollup-Boost is live on Unichain. https://blog.uniswap.org/rollup-boost-is-live-on-unichain
+[13] Uniswap Labs. Rollup-Boost is live on Unichain. https://blog.uniswap.org/rollup-boost-is-live-on-unichain
